@@ -59,6 +59,38 @@ remove(dtall)
 remove(dmelt)
 remove(dset)
 
+# BASELINE STRATEGY COUNTS
+# 1 executions of  2000 steps
+dset <- read.table(file="./data/BASELINE_COUNTS.csv", sep=",", header=TRUE)
+dmelt <- melt(dset, id.vars="STEPS")
+# rename levels
+colnames(dmelt) <- c("Steps", "Strategy", "Value")
+
+pplot <- ggplot(dmelt, aes(Steps, Value, color=Strategy)) + 
+    geom_line(size = 1) +
+    ggtitle("")  +
+    xlab("Steps") + 
+    ylab("Strategy counts") +
+    scale_x_continuous(breaks=c(0, 250, 500, 750, 1000, 1250, 1500, 1750, 2000)) +
+    scale_colour_manual(values = c("CC" = "#007cff", "CD" = "#ff0000", "DC" = "#ceb600", "DD" = "#048c4e")) +
+    scale_fill_manual(values = c("CC" = "#007cff", "CD" = "#ff0000", "DC" = "#ceb600", "DD" = "#048c4e")) +
+    theme(plot.title=element_text(hjust = 0.5),
+        axis.title.x=element_text(size=ptextsize, family=pfamily),
+        axis.title.y=element_text(size=ptextsize, family=pfamily),
+        axis.text=element_text(size=ptextsize-2 , family=pfamily),
+        text=element_text(size=ptextsize, family=pfamily),
+        legend.spacing = unit(1, "cm"),
+        rect=element_blank()) +
+    theme(axis.line.x = element_line(color="grey", size = 0.5),
+        axis.line.y = element_line(color="grey", size = 0.5))
+
+png(file="./plots/baseline_counts.png", width = 800, height = 500)
+print(pplot)
+dev.off()
+remove(pplot)
+remove(dmelt)
+remove(dset)
+
 # ICCWS - Immigrant chance cooperate with same from 0 to 1 in 0.1 intervals
 # 10 executions of 2000 steps per interval
 dset <- read.table(file="./data/ICCWS.csv", sep=",", header=TRUE)

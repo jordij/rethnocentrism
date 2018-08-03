@@ -1,2 +1,2 @@
 # rethnocentrism
- Execute `main.r` like a champ and supposedly `output` should be full of goodies.
+ Execute `main.r` like a champ then check the `plots` folder, it should be full of goodies.
