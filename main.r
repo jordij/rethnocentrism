@@ -261,3 +261,46 @@ remove(pplot)
 remove(dtall)
 remove(dmelt)
 remove(dset)
+
+
+# GOR - Gain of receving from 0 to 0.5 in 0.01 intervals
+# 10 executions of 2000 steps per interval
+dset <- read.table(file="./data/GOR.csv", sep=",", header=TRUE)
+dmelt <- melt(dset, id.vars="gain.of.receiving")
+dtall <- subset(dmelt, (variable == "cc.percent" | variable == "cd.percent" | variable == "dc.percent" | variable == "dd.percent"))
+# rename levels and values
+colnames(dtall) <- c("cost", "Strategy", "Value")
+levels(dtall$Strategy)[levels(dtall$Strategy) == "cc.percent"] <- "CC"
+levels(dtall$Strategy)[levels(dtall$Strategy) == "cd.percent"] <- "CD"
+levels(dtall$Strategy)[levels(dtall$Strategy) == "dc.percent"] <- "DC"
+levels(dtall$Strategy)[levels(dtall$Strategy) == "dd.percent"] <- "DD"
+
+pplot <- ggplot(dtall, aes(x=cost, Value, col=Strategy)) + 
+    geom_point() + 
+    geom_smooth(method="loess") +
+    ggtitle("")  +
+    xlab("Gain of receiving") + 
+    ylab("Strategy percentage") +
+    scale_x_continuous(breaks=c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)) +
+    scale_y_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1)) +
+    scale_colour_manual(values = c("CC" = "#007cff", "CD" = "#ff0000", "DC" = "#ceb600", "DD" = "#048c4e")) +
+    scale_fill_manual(values = c("CC" = "#007cff", "CD" = "#ff0000", "DC" = "#ceb600", "DD" = "#048c4e")) +
+    theme(plot.title=element_text(hjust = 0.5),
+        axis.title.x=element_text(size=ptextsize, family=pfamily),
+        axis.title.y=element_text(size=ptextsize, family=pfamily),
+        axis.text=element_text(size=ptextsize-2 , family=pfamily),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        text=element_text(size=ptextsize, family=pfamily),
+        legend.spacing = unit(1, "cm"),
+        rect=element_blank()) +
+    theme(axis.line.x = element_line(color="grey", size = 0.5),
+        axis.line.y = element_line(color="grey", size = 0.5))
+
+png(file="./plots/gor.png", width = 800, height = 500)
+print(pplot)
+dev.off()
+remove(pplot)
+remove(dtall)
+remove(dmelt)
+remove(dset)
